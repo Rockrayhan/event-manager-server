@@ -105,6 +105,22 @@ async function run() {
       res.send(result);
     });
 
+    //======== handle join events =========
+    app.patch("/events/join/:id", async (req, res) => {
+      const id = req.params.id;
+
+      try {
+        const result = await eventsCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $inc: { attendeeCount: 1 } }
+        );
+        res.send(result);
+      } catch (error) {
+        console.error("Failed to join event:", error);
+        res.status(500).send({ error: "Failed to join event" });
+      }
+    });
+
     // ========= user routes =========
 
     // add user
